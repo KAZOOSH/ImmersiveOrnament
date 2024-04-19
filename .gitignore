@@ -1,0 +1,6 @@
+*.code-workspace
+*.qbs
+obj/*
+*.so
+.vscode/*
+bin/immersive_ornament_debug
