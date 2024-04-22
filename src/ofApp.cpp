@@ -53,7 +53,9 @@ void ofApp::setup(){
         warper.back().hide();
         warper.back().load(ofToString(i), "settings.json");
         ++i;
-    }    
+    }   
+
+    receiver.setup(settings["network"]["port"]); 
 }
 
 
@@ -68,28 +70,60 @@ void ofApp::update(){
         ornament.update();
     }
     
+    while(receiver.hasWaitingMessages()){
+
+		// get the next message
+		ofxOscMessage m;
+		receiver.getNextMessage(m);
+		// check for mouse moved message
+		if(m.getAddress() == "/1/fader3"){
+            tileSize = ofMap(m.getArgAsFloat(0),0,1,30,400);
+            //cout << tileSize <<endl;
+            //ornament.setTileSize(ofMap(m.getArgAsFloat(0),0,1,30,400));
+		}else if(m.getAddress() == "/1/fader2"){
+            wallpaperGroup = ofMap(m.getArgAsFloat(0),0,1,9,16.9,true);
+            //ornament.setWallpaperGroup(ofMap(m.getArgAsFloat(0),0,1,9,16.9,true));
+		}else if(m.getAddress() == "/1/fader1"){
+            angle = ofMap(m.getArgAsFloat(0),0,1,0,2*PI);
+            //ornament.setAngle(ofMap(m.getArgAsFloat(0),0,1,0,2*PI));
+		}
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
     //draw ornament
-    ornament.draw(0,0);
-    
+    ofBackground(0);
+    drawScreen(0);
+
     //draw debug view to see ornament part in camera picture
-    ornament.drawDebug(0, 300,400,300);
-    
-    //draw gui
-    ofDrawBitmapStringHighlight("wallpaperGroup: " + ofToString(ornament.getWallpaperGroupAsInt()), 10, 580);
-    ofDrawBitmapStringHighlight("cellStructure: " + ofToString(ornament.getCellStructure()), 10, 600);
-    panel.draw();
-    
+    if(isDebug){
+        ofPushStyle();
+        ornament.drawDebug(400, 400,400,300);
+        //draw gui
+        ofDrawBitmapStringHighlight("wallpaperGroup: " + ofToString(ornament.getWallpaperGroupAsInt()), 10, 580);
+        ofDrawBitmapStringHighlight("cellStructure: " + ofToString(ornament.getCellStructure()), 10, 600);
+        panel.draw();
+        ofPopStyle();
+    }
 }
 
 void ofApp::drawWindow2(ofEventArgs &args)
 {
     ofBackground(0);
     drawScreen(1);
+}
+
+void ofApp::drawWindow3(ofEventArgs &args)
+{
+    ofBackground(0);
+    drawScreen(2);
+}
+
+void ofApp::drawWindow4(ofEventArgs &args)
+{
+    ofBackground(0);
+    drawScreen(3);
 }
 
 void ofApp::keyPressedWindow2(ofKeyEventArgs &args)
@@ -105,18 +139,6 @@ void ofApp::keyPressedWindow3(ofKeyEventArgs &args)
 void ofApp::keyPressedWindow4(ofKeyEventArgs &args)
 {
     processKeyPressedEvent(args.key, 3);
-}
-
-void ofApp::drawWindow3(ofEventArgs &args)
-{
-    ofBackground(0);
-    drawScreen(2);
-}
-
-void ofApp::drawWindow4(ofEventArgs &args)
-{
-    ofBackground(0);
-    drawScreen(3);
 }
 
 void ofApp::exit()
@@ -175,6 +197,7 @@ void ofApp::drawScreen(int screenId)
 
     ofSetColor(ofColor::red);
     warper[screenId].drawSelectedCorner();
+    ofSetColor(255);
 }
 
 void ofApp::processKeyPressedEvent(int key, int screenId)
@@ -189,6 +212,7 @@ void ofApp::processKeyPressedEvent(int key, int screenId)
     }
     if (key == 'd' || key == 'D')
     {
+        isDebug = true;
         for (size_t i = 0; i < warper.size(); i++)
         {
             if (i == screenId)
@@ -196,14 +220,13 @@ void ofApp::processKeyPressedEvent(int key, int screenId)
                 warper[i].enableKeyboardShortcuts();
                 warper[i].enableMouseControls();
                 warper[i].show();
-                isDebug = true;
+                
             }
             else
             {
                 warper[i].disableKeyboardShortcuts();
                 warper[i].disableMouseControls();
                 warper[i].hide();
-                isDebug = false;
             }
         }
     }
@@ -237,7 +260,7 @@ void ofApp::processKeyPressedEvent(int key, int screenId)
 void ofApp::keyPressed  (int key){
     processKeyPressedEvent(key,0);
     //manipulate inputs
-    if (key == 'm'){
+    /*if (key == 'm'){
         ornament.setCellStructure(ornament.getCellStructure()+1);
     }
     if (key == 'n'){
@@ -249,7 +272,7 @@ void ofApp::keyPressed  (int key){
     }
     if (key == 'v'){
         ornament.setWallpaperGroup(ornament.getWallpaperGroupAsInt()-1);
-    }
+    }*/
 }
 
 //--------------------------------------------------------------

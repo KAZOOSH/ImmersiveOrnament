@@ -1,4 +1,10 @@
 ofxGui
+ofxGui
+ofxOpenCv
 ofxOpenCv
 ofxOrnament
+ofxOrnament
+ofxOsc
+ofxOsc
+ofxQuadWarp
 ofxQuadWarp

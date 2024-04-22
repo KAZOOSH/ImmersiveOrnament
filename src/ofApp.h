@@ -4,6 +4,8 @@
 #include "Ornament.h"
 #include "ofxGui.h"
 #include "ofxQuadWarp.h"
+#include "ofxOsc.h"
+//#include "ofxOpenCv.h"
 
 class ofApp : public ofBaseApp{
     
@@ -47,6 +49,7 @@ public:
     ofParameter<int> wallpaperGroup;
     ofParameter<float> angle;
     
+    ofxOscReceiver receiver;
     
     ofVideoGrabber vidGrabber;
     vector<ofxQuadWarp> warper;
