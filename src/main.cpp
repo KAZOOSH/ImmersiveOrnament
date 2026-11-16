@@ -4,6 +4,11 @@
 
 int main()
 {
+	// allow an external, writable data folder (used by the AppImage, see scripts/make_appimage.sh)
+	if (const char* dataDir = std::getenv("IMMERSIVE_ORNAMENT_DATA")) {
+		ofSetDataPathRoot(std::string(dataDir) + "/");
+	}
+
 	ofJson jSettings = ofLoadJson("settings.json")["screens"];
 
 	// creates windows, up to 4 supported

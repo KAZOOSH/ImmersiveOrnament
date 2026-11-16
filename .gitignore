@@ -4,3 +4,9 @@ obj/*
 *.so
 .vscode/*
 bin/immersive_ornament_debug
+compile_commands.json
+.cache/
+tools/
+build/
+*.AppImage
+ImmersiveOrnament-data/
